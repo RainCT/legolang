@@ -1,0 +1,23 @@
+8
+
+5 6 7 8!
+5 6 7 2!
+
+[5, 6, 7, 2]
+
+Array size: 4 (bs), 4 (as)!
+An empty array has size 0
+After adding one element to it, it's size is 1
+
+8 == as[-1] == 8
+3 == as[-2] == 3
+6 == as[-3] == 6
+5 == as[-4] == 5
+
+[5.4, 3.0, 2.0]
+
+[5.4, 3.0, 2.0]
+
+[hello!, you!, how are you?, hello! how are you?]
+
+this is true
