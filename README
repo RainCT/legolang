@@ -1,0 +1,216 @@
+LegoLang
+
+-----------------------------------------------------------
+
+                          By Gerard Canal Camprodon
+                          &  Siegfried-A. Gevatter Pujals
+
+                          Spring 2012 - FIB / BarcelonaTech
+
+-----------------------------------------------------------
+
+INTRODUCTION
+
+ LegoLang is a simple programming language for NXT 2.0 Lego
+ Mindstorms running Lejos (Java for LEGO Mindstorms).
+
+ LegoLang's syntax is inspired by Python, but it features
+ static typing (with coercion) and lexical scoping.
+
+ **********************************************************
+ NOTE: LegoLang was a university project for our Compilers
+       course and is no longer maintained.
+ **********************************************************
+
+-----------------------------------------------------------
+
+STRUCTURE
+
+ The following example illustrates the structure of a
+ LegoLang program:
+
+  default light S1
+  default ultrasonic S2
+  // supported sensor types: ultrasonic, light & touch
+
+  global int speed = 500
+
+  print "Hi!"
+  move_forward()
+
+  def move_forward():
+      setLamp(GREEN)
+      move(speed, motorA); move(speed, motorB)
+
+  on signal escape_button_pressed:
+      abort()
+
+  on signal onRange40:
+      // There's an obstacle, avoid it
+      setLamp(RED)
+      def turn
+      if random(0, 1):
+          move(300, motorA); move(-300, motorB)
+      else:
+          move(-300, motorA); move(300, motorB)
+      while rangeScan(40) != -1:
+          /* wait until we've turned enough to avoid
+             the obstacle */
+          pass
+      move_forward()
+
+  while true:
+      pass
+
+ The program starts with a defaults declaration section,
+ followed by a global variable section. After that, the
+ main code block follows.
+ 
+ Code blocks are executed in sequential order, and may
+ contain function (or signal) declarations in any place
+ (predeclarations aren't necessary - nor supported).
+
+ As you can see, blocks are indented by either exactly 1
+ tab or 4 spaces.
+
+ Functions can be nested, and will be visible in sister
+ and child functions. Variables are only visible in the
+ block where they are declared (with the exception of
+ global variables, which are visible everywhere).
+
+-----------------------------------------------------------
+
+TYPES
+
+ - string                   - color
+ - int                      - sensor
+ - float                    - motor
+ - bool                     - button
+
+ Arrays of all basic types are supported. Their syntax is
+ as follows:
+  int[] numbers = int[21, 42]
+  print "The array has has " + #numbers + " elements."
+  print "The first element is: " + numbers[0]
+  print "The entire array looks liek this: " + numbers
+
+ The sensor, motor and button variables must take one of
+ the following values:
+  sensor: S1, S2, S3, S4
+  motor: motorA, motorB, motorC
+  button: ENTER, LEFT, RIGHT, ESCAPE
+ 
+ The following colors are predefined: RED, GREEN, BLUE, WHITE and
+ BLACK. Other colors can be specified in hexadecimal format (eg.
+ #123456 or #ccc).
+
+-----------------------------------------------------------
+
+INSTRUCTIONS
+
+ LOOPS
+
+  while <expr>:
+      <body>
+ 
+  for <variable> in <start> .. <end>:
+      <body>
+ 
+  foreach <variable> in <array>:
+      <body>
+
+  break (inside while, for or foreach loops)
+
+  pass (do nothing)
+
+ CONDITIONALS
+
+  if <expr>:
+      <body-if>
+  else if <expr>:
+      <body-else-if>
+  else:
+      <body-else>
+
+ FUNCTIONS
+
+  def <name> (<parameters>) [returns <type>]:
+      <body>
+
+ SIGNALS
+
+  on signal <name>:
+      <body>
+
+  The signal name may be any of the following:
+  {any,enter,left,right,escape}_button_pressed,
+  onTouch or onRange[<dist>].
+
+  If the signal type is onRange, a special variable named
+  `signal_data' will be available, containing the distance
+  to the detected object.
+
+ OTHER INSTRUCTIONS
+
+  ↑<variable>, <variable>↑
+  pre- and post-increment
+
+  ↓<variable>, <variable>↓
+  pre- and post-decrement
+
+  print <expression> [at [<X>,] <Y>]
+ 
+ STANDARD LIBRARY
+
+  LegoLang includes a standard library with functions
+  wrapping some of the most important functionalities
+  in Lejos.
+
+-----------------------------------------------------------
+
+USAGE EXAMPLES
+
+ $ ./bin/llcc -h
+ usage: llcc [options] 
+  -C,--code		don't delete the generated code
+  -d,--debug		create debugging file (.nxd)
+  -h,--help		show this message
+  -o,--output-file		output file
+  -q,--quiet		don't show any output on success
+  -R,--restricted		build into a standard .jar (for testing purposes)
+  -S,--source-only	only generate code (don't build)
+  -U,--upload-only	upload program (doesn't generate .nxj)
+  -u,--upload		upload program
+  -v,--verbose		show debugging information
+
+ $ ./bin/llcc -R examples/fibonacci.ll
+ Code written.
+ Code compiled.
+ Program built into fibonacci.jar.
+
+ $ java -jar fibonacci.jar
+ 1
+ 1
+ 2
+ 3
+ 5
+ [...]
+
+-----------------------------------------------------------
+
+LICENSE
+
+ All code (other than the external dependencies in libs/) is
+ released under the ISC License:
+
+ Permission to use, copy, modify, and/or distribute this software for
+ any purpose with or without fee is hereby granted, provided that the
+ above copyright notice and this permission notice appear in all copies.
+
+ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+ OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
