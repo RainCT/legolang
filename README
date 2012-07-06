@@ -48,7 +48,7 @@ STRUCTURE
   on signal onRange40:
       // There's an obstacle, avoid it
       setLamp(RED)
-      def turn
+
       if random(0, 1):
           move(300, motorA); move(-300, motorB)
       else:
